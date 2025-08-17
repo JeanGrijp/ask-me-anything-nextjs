@@ -9,6 +9,7 @@ export interface GetRoomMessagesResponse {
     amountOfReactions: number;
     answered: boolean;
     user_reacted: boolean;
+    is_user_message: boolean; // Indica se a mensagem foi criada pelo usuário atual
   }[]
 }
 
@@ -49,6 +50,7 @@ export async function getRoomMessages({ roomId }: GetRoomMessagesRequest): Promi
     reaction_count: number
     answered: boolean
     user_reacted: boolean
+    is_user_message: boolean // API deve retornar se a mensagem é do usuário atual
   }>
 
   try {
@@ -71,6 +73,7 @@ export async function getRoomMessages({ roomId }: GetRoomMessagesRequest): Promi
         amountOfReactions: item.reaction_count,
         answered: item.answered,
         user_reacted: item.user_reacted,
+        is_user_message: item.is_user_message || false, // Default para false se não existir
       }
     })
   }

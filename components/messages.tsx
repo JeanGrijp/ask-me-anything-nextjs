@@ -26,30 +26,78 @@ export function Messages({ roomId }: MessagesProps) {
   useMessagesWebSockets({ roomId })
 
   const sortedMessages = data.messages.sort((a, b) => {
+    // Primeiro critério: mensagens não respondidas vêm antes das respondidas
+    if (a.answered !== b.answered) {
+      return a.answered ? 1 : -1 // não respondidas (false) vêm primeiro
+    }
+    
+    // Segundo critério: dentro do mesmo grupo (respondidas ou não), ordenar por reações
     return b.amountOfReactions - a.amountOfReactions
   })
+
+  // Separar mensagens para adicionar divisor visual
+  const unansweredMessages = sortedMessages.filter(message => !message.answered)
+  const answeredMessages = sortedMessages.filter(message => message.answered)
 
   console.log('Messages component - hostStatus:', hostStatus)
   console.log('Messages component - roomInfos:', roomInfos)
 
   return (
-    <ol className="list-decimal list-outside px-3 space-y-8">
-      {sortedMessages.map(message => {
-        return (
-          <Message 
-            key={message.id}
-            id={message.id}
-            text={message.text}
-            amountOfReactions={message.amountOfReactions} 
-            answered={message.answered}
-            roomId={roomId}
-            hasUserReacted={hasReacted(message.id)}
-            onReactionAdd={() => addReaction(message.id)}
-            onReactionRemove={() => removeReaction(message.id)}
-            isHost={hostStatus?.is_host || false}
-          />
-        )
-      })}
-    </ol>
+    <div className="px-3 space-y-8">
+      {/* Mensagens não respondidas */}
+      {unansweredMessages.length > 0 && (
+        <ol className="list-decimal list-outside space-y-8">
+          {unansweredMessages.map(message => {
+            return (
+              <Message 
+                key={message.id}
+                id={message.id}
+                text={message.text}
+                amountOfReactions={message.amountOfReactions} 
+                answered={message.answered}
+                roomId={roomId}
+                hasUserReacted={hasReacted(message.id)}
+                onReactionAdd={() => addReaction(message.id)}
+                onReactionRemove={() => removeReaction(message.id)}
+                isHost={hostStatus?.is_host || false}
+                isUserMessage={message.is_user_message}
+              />
+            )
+          })}
+        </ol>
+      )}
+
+      {/* Separador visual quando há mensagens respondidas */}
+      {unansweredMessages.length > 0 && answeredMessages.length > 0 && (
+        <div className="flex items-center gap-4 py-6">
+          <div className="flex-1 h-px bg-zinc-800"></div>
+          <span className="text-sm text-zinc-500 font-medium">Perguntas Respondidas</span>
+          <div className="flex-1 h-px bg-zinc-800"></div>
+        </div>
+      )}
+
+      {/* Mensagens respondidas */}
+      {answeredMessages.length > 0 && (
+        <ol className="list-decimal list-outside space-y-8" start={unansweredMessages.length + 1}>
+          {answeredMessages.map(message => {
+            return (
+              <Message 
+                key={message.id}
+                id={message.id}
+                text={message.text}
+                amountOfReactions={message.amountOfReactions} 
+                answered={message.answered}
+                roomId={roomId}
+                hasUserReacted={hasReacted(message.id)}
+                onReactionAdd={() => addReaction(message.id)}
+                onReactionRemove={() => removeReaction(message.id)}
+                isHost={hostStatus?.is_host || false}
+                isUserMessage={message.is_user_message}
+              />
+            )
+          })}
+        </ol>
+      )}
+    </div>
   )
 }

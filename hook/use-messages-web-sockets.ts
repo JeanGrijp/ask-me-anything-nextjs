@@ -13,6 +13,7 @@ type WebhookMessage =
   | { kind: "message_answered"; value: { id: string } }
   | { kind: "message_reaction_increased"; value: { id: string; count: number } }
   | { kind: "message_reaction_decreased"; value: { id: string; count: number } }
+  | { kind: "message_deleted"; value: { id: string } }
   | { kind: "room_deleted"; value: { id: string; reason: string } };
 
 export function useMessagesWebSockets({
@@ -54,6 +55,7 @@ export function useMessagesWebSockets({
                   amountOfReactions: 0,
                   answered: false,
                   user_reacted: false,
+                  is_user_message: false, // Por padrão, assumir que não é mensagem do usuário atual via WebSocket
                 }
               ],
             }
@@ -67,7 +69,7 @@ export function useMessagesWebSockets({
             }
 
             return {
-              messages: state.messages.map((item: { id: string; text: string; amountOfReactions: number; answered: boolean, user_reacted: boolean }) => {
+              messages: state.messages.map((item: { id: string; text: string; amountOfReactions: number; answered: boolean, user_reacted: boolean, is_user_message: boolean }) => {
                 if (item.id === data.value.id) {
                   return { ...item, answered: true }
                 }
@@ -86,13 +88,25 @@ export function useMessagesWebSockets({
             }
 
             return {
-              messages: state.messages.map((item: { id: string; text: string; amountOfReactions: number; answered: boolean, user_reacted: boolean }) => {
+              messages: state.messages.map((item: { id: string; text: string; amountOfReactions: number; answered: boolean, user_reacted: boolean, is_user_message: boolean }) => {
                 if (item.id === data.value.id) {
                   return { ...item, amountOfReactions: data.value.count }
                 }
 
                 return item
               }),
+            }
+          })
+
+          break;
+        case 'message_deleted':
+          queryClient.setQueryData<GetRoomMessagesResponse>(['messages', roomId], (state: GetRoomMessagesResponse | undefined) => {
+            if (!state) {
+              return undefined
+            }
+
+            return {
+              messages: state.messages.filter((item) => item.id !== data.value.id)
             }
           })
 
