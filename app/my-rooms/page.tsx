@@ -1,7 +1,7 @@
 'use client'
 
-import { UserRoomsList } from '@/components/user-rooms-list'
-import { LogoutButton } from '@/components/logout-button'
+import { UserRoomsList } from '@/src/components/user-rooms-list'
+import { LogoutButton } from '@/src/components/logout-button'
 import { Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 

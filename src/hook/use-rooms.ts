@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { getRooms } from '@/http/get-rooms'
+import { getRooms } from '@/src/http/get-rooms'
 
 export function useRooms() {
   return useQuery({

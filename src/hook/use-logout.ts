@@ -3,7 +3,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { logoutUser } from '@/http/logout-user'
+import { logoutUser } from '@/src/http/logout-user'
 
 export function useLogout() {
   const router = useRouter()

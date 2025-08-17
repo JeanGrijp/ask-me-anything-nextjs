@@ -2,19 +2,19 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { createMessageReaction } from '@/http/create-message-reaction'
-import type { GetRoomMessagesResponse } from '@/http/get-room-messages'
+import { removeMessageReaction } from '@/src/http/remove-message-reaction'
+import type { GetRoomMessagesResponse } from '@/src/http/get-room-messages'
 
-interface UseCreateMessageReactionProps {
+interface UseRemoveMessageReactionProps {
   roomId: string
 }
 
-export function useCreateMessageReaction({ roomId }: UseCreateMessageReactionProps) {
+export function useRemoveMessageReaction({ roomId }: UseRemoveMessageReactionProps) {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: ({ messageId }: { messageId: string }) => 
-      createMessageReaction({ roomId, messageId }),
+      removeMessageReaction({ roomId, messageId }),
     
     onSuccess: (data, { messageId }) => {
       // Atualiza o cache local com o count real do servidor
@@ -35,7 +35,7 @@ export function useCreateMessageReaction({ roomId }: UseCreateMessageReactionPro
     },
     
     onError: (error: Error) => {
-      toast.error(`Erro ao adicionar reação: ${error.message}`)
+      toast.error(`Erro ao remover reação: ${error.message}`)
     },
   })
 }

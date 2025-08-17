@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { deleteMessage } from '../../http/delete-message'
+import { deleteMessage } from '../http/delete-message'
 import { toast } from 'sonner'
-import type { GetRoomMessagesResponse } from '../../http/get-room-messages'
+import type { GetRoomMessagesResponse } from '../http/get-room-messages'
 
 interface DeleteMessageVariables {
   messageId: string

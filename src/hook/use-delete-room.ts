@@ -1,4 +1,4 @@
-import { deleteRoom } from '@/http/delete-room'
+import { deleteRoom } from '@/src/http/delete-room'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { toast } from 'sonner'

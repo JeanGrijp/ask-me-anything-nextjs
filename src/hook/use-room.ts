@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { getRoom } from '@/http/get-room'
+import { getRoom } from '@/src/http/get-room'
 
 interface UseRoomProps {
   roomId: string

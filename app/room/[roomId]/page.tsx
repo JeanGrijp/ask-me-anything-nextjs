@@ -5,8 +5,8 @@ import { toast } from "sonner"
 import { Suspense, useEffect, useState } from "react"
 import { Share2 } from "lucide-react"
 import amaLogo from '@/assets/ama-logo.svg'
-import { CreateMessageForm } from "@/components/create-message-form"
-import { Messages } from "@/components/messages"
+import { CreateMessageForm } from "@/src/components/create-message-form"
+import { Messages } from "@/src/components/messages"
 import Image from "next/image"
 
 export default function RoomPage() {

@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { getHostStatus } from '@/http/get-host-status'
+import { getHostStatus } from '@/src/http/get-host-status'
 
 interface UseHostStatusProps {
   roomId: string

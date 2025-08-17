@@ -2,8 +2,8 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { markMessageAsAnswered } from '@/http/mark-message-as-answered'
-import type { GetRoomMessagesResponse } from '@/http/get-room-messages'
+import { markMessageAsAnswered } from '@/src/http/mark-message-as-answered'
+import type { GetRoomMessagesResponse } from '@/src/http/get-room-messages'
 
 interface UseMarkMessageAsAnsweredProps {
   roomId: string

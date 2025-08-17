@@ -5,7 +5,7 @@ import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 
 import amaLogo from '@/assets/ama-logo.svg'
-import { createRoom } from '@/http/create-room'
+import { createRoom } from '@/src/http/create-room'
 import { setHostToken } from '@/utils/host-token'
 import Image from 'next/image'
 

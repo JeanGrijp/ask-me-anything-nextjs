@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from 'react'
 import { Calendar, MessageSquare, Users, Trash2 } from 'lucide-react'
-import { useUserRooms } from '@/hook/use-user-rooms'
+import { useUserRooms } from '@/src/hook/use-user-rooms'
 import { useDeleteRoom } from '../hook/use-delete-room'
 import { useRouter } from 'next/navigation'
-import { formatContextualDate, formatSmartDate } from '@/lib/date-utils'
+import { formatContextualDate, formatSmartDate } from '@/src/lib/date-utils'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/src/components/ui/popover"
 import { RoomListSkeleton } from './room-list-skeleton'
 
 export function UserRoomsList() {

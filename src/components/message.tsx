@@ -5,7 +5,7 @@ import { createMessageReaction } from "../http/create-message-reaction";
 import { toast } from "sonner";
 import { removeMessageReaction } from "../http/remove-message-reaction";
 import { markMessageAsAnswered } from "../http/mark-message-as-answered";
-import { useDeleteMessage } from "../src/hooks/use-delete-message";
+import { useDeleteMessage } from "../hook/use-delete-message";
 import { Switch } from "./ui/switch";
 import { Label } from "./ui/label";
 import {

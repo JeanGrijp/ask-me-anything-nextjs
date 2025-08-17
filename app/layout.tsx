@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { ReactQueryProvider } from './providers'
-import { Toaster } from '@/components/ui/sonner'
+import { Toaster } from '@/src/components/ui/sonner'
 
 export const metadata: Metadata = {
   title: 'Ask Me Anything - Next.js',

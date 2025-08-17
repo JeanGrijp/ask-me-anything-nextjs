@@ -1,11 +1,11 @@
 
-import { useMessagesWebSockets } from "@/hook/use-messages-web-sockets";
+import { useMessagesWebSockets } from "@/src/hook/use-messages-web-sockets";
 import { Message } from "./message";
-import { getRoomMessages } from "@/http/get-room-messages";
+import { getRoomMessages } from "@/src/http/get-room-messages";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useUserReactions } from "@/hook/use-user-reactions";
-import { useHostStatus } from "@/hook/use-host-status";
-import { useRoom } from "@/hook/use-room";
+import { useUserReactions } from "@/src/hook/use-user-reactions";
+import { useHostStatus } from "@/src/hook/use-host-status";
+import { useRoom } from "@/src/hook/use-room";
 
 interface MessagesProps {
   roomId: string
