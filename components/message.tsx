@@ -1,15 +1,23 @@
 import { ArrowUp } from "lucide-react";
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+
 import { createMessageReaction } from "../http/create-message-reaction";
 import { toast } from "sonner";
 import { removeMessageReaction } from "../http/remove-message-reaction";
+import { markMessageAsAnswered } from "../http/mark-message-as-answered";
+import { Switch } from "./ui/switch";
+import { Label } from "./ui/label";
 
 interface MessageProps {
   id: string
   text: string
   amountOfReactions: number
   answered?: boolean
+  roomId: string
+  hasUserReacted: boolean
+  onReactionAdd: () => void
+  onReactionRemove: () => void
+  isHost?: boolean
 }
 
 export function Message({ 
@@ -17,40 +25,46 @@ export function Message({
   text, 
   amountOfReactions, 
   answered = false,
+  roomId,
+  hasUserReacted: initialHasReacted,
+  onReactionAdd,
+  onReactionRemove,
+  isHost = false,
 }: MessageProps) {
-  const { roomId } = useParams()
-  const [hasReacted, setHasReacted] = useState(false)
+  const [hasReacted, setHasReacted] = useState(initialHasReacted)
 
-  if (!roomId) {
-    throw new Error('Messages components must be used within room page')
-  }
+  // Sincroniza o estado local com a prop quando ela mudar
+  useEffect(() => {
+    setHasReacted(initialHasReacted)
+  }, [initialHasReacted])
 
   async function createMessageReactionAction() {
-    if (!roomId) {
-      return
-    }
-
     try {
       await createMessageReaction({ messageId, roomId })
+      setHasReacted(true)
+      onReactionAdd()
     } catch {
       toast.error('Falha ao reagir mensagem, tente novamente!')
     }
-
-    setHasReacted(true)
   }
 
   async function removeMessageReactionAction() {
-    if (!roomId) {
-      return
-    }
-
     try {
       await removeMessageReaction({ messageId, roomId })
+      setHasReacted(false)
+      onReactionRemove()
     } catch {
       toast.error('Falha ao remover reação, tente novamente!')
     }
+  }
 
-    setHasReacted(false)
+  async function handleMarkAsAnswered() {
+    try {
+      await markMessageAsAnswered({ messageId, roomId })
+      toast.success('Mensagem marcada como respondida!')
+    } catch {
+      toast.error('Falha ao marcar mensagem como respondida!')
+    }
   }
 
   return (
@@ -75,6 +89,15 @@ export function Message({
           <ArrowUp className="size-4" />
           Curtir pergunta ({amountOfReactions})
         </button>
+      )}
+      {isHost && !answered && (
+        <div className="flex items-center gap-2 mt-3">
+          <Switch 
+            id={`answered-${messageId}`} 
+            onCheckedChange={handleMarkAsAnswered}
+          />
+          <Label htmlFor={`answered-${messageId}`}>Marcar como respondida</Label>
+        </div>
       )}
     </li>
   )

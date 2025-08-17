@@ -1,5 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query"
 import { useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 import type { GetRoomMessagesResponse } from "../http/get-room-messages"
 
 interface useMessagesWebSocketsParams {
@@ -10,12 +12,14 @@ type WebhookMessage =
   | { kind: "message_created"; value: { id: string, message: string } }
   | { kind: "message_answered"; value: { id: string } }
   | { kind: "message_reaction_increased"; value: { id: string; count: number } }
-  | { kind: "message_reaction_decreased"; value: { id: string; count: number } };
+  | { kind: "message_reaction_decreased"; value: { id: string; count: number } }
+  | { kind: "room_deleted"; value: { id: string; reason: string } };
 
 export function useMessagesWebSockets({
   roomId,
 }: useMessagesWebSocketsParams) {
   const queryClient = useQueryClient()
+  const router = useRouter()
 
   useEffect(() => {
     const wsUrl = process.env.NEXT_PUBLIC_WS_URL
@@ -49,6 +53,7 @@ export function useMessagesWebSockets({
                   text: data.value.message,
                   amountOfReactions: 0,
                   answered: false,
+                  user_reacted: false,
                 }
               ],
             }
@@ -62,7 +67,7 @@ export function useMessagesWebSockets({
             }
 
             return {
-              messages: state.messages.map((item: { id: string; text: string; amountOfReactions: number; answered: boolean }) => {
+              messages: state.messages.map((item: { id: string; text: string; amountOfReactions: number; answered: boolean, user_reacted: boolean }) => {
                 if (item.id === data.value.id) {
                   return { ...item, answered: true }
                 }
@@ -81,7 +86,7 @@ export function useMessagesWebSockets({
             }
 
             return {
-              messages: state.messages.map((item: { id: string; text: string; amountOfReactions: number; answered: boolean }) => {
+              messages: state.messages.map((item: { id: string; text: string; amountOfReactions: number; answered: boolean, user_reacted: boolean }) => {
                 if (item.id === data.value.id) {
                   return { ...item, amountOfReactions: data.value.count }
                 }
@@ -92,11 +97,23 @@ export function useMessagesWebSockets({
           })
 
           break;
+        case 'room_deleted':
+          // Sala foi deletada pelo criador
+          toast.error('Esta sala foi deletada pelo criador')
+          
+          // Invalidar queries relacionadas à sala
+          queryClient.removeQueries({ queryKey: ['messages', roomId] })
+          queryClient.invalidateQueries({ queryKey: ['rooms'] })
+          
+          // Redirecionar para a página de salas
+          router.push('/')
+          
+          break;
       }
     }
 
     return () => {
       ws.close()
     }
-  }, [roomId, queryClient])
+  }, [roomId, queryClient, router])
 }

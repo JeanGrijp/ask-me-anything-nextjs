@@ -1,19 +1,17 @@
 import { ArrowRight } from "lucide-react";
-import { useParams } from "react-router-dom";
+
 import { createMessage } from "../http/create-message";
 import { toast } from "sonner";
 
-export function CreateMessageForm() {
-  const { roomId } = useParams()
+interface CreateMessageFormProps {
+  roomId: string
+}
 
-  if (!roomId) {
-    throw new Error('Messages components must be used within room page')
-  }
-
+export function CreateMessageForm({ roomId }: CreateMessageFormProps) {
   async function createMessageAction(data: FormData) {
     const message = data.get('message')?.toString()
 
-    if (!message || !roomId) {
+    if (!message) {
       return
     }
 

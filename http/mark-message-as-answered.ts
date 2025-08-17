@@ -1,3 +1,5 @@
+import { getHostToken } from '@/utils/host-token'
+
 interface MarkMessageAsAnsweredRequest {
   roomId: string
   messageId: string
@@ -10,12 +12,19 @@ export async function markMessageAsAnswered({ roomId, messageId }: MarkMessageAs
     throw new Error('NEXT_PUBLIC_API_URL não está configurada')
   }
 
+  const hostToken = getHostToken(roomId)
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  }
+
+  if (hostToken) {
+    headers['X-Host-Token'] = hostToken
+  }
+
   const response = await fetch(`${apiUrl}/rooms/${roomId}/messages/${messageId}/answer`, {
     method: 'PATCH',
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers,
   })
 
   if (!response.ok) {

@@ -5,6 +5,7 @@ export interface GetRoomMessageResponse {
   reaction_count: number
   answered: boolean
   created_at: string
+  user_reacted: boolean
 }
 
 interface GetRoomMessageRequest {

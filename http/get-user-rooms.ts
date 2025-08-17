@@ -1,7 +1,7 @@
 export interface GetUserRoomsResponse {
   id: string
   theme: string
-  createdAt: string
+  created_at: string // API retorna em snake_case
 }
 
 export async function getUserRooms(): Promise<GetUserRoomsResponse[]> {

@@ -1,3 +1,5 @@
+import { getHostToken } from '@/utils/host-token'
+
 export interface GetHostStatusResponse {
   is_host: boolean
   room_id: string
@@ -14,12 +16,19 @@ export async function getHostStatus({ roomId }: GetHostStatusRequest): Promise<G
     throw new Error('NEXT_PUBLIC_API_URL não está configurada')
   }
 
+  const hostToken = getHostToken(roomId)
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  }
+
+  if (hostToken) {
+    headers['X-Host-Token'] = hostToken
+  }
+
   const response = await fetch(`${apiUrl}/rooms/${roomId}/host-status`, {
     method: 'GET',
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers,
   })
 
   if (!response.ok) {
