@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Calendar, MessageSquare, Users, Trash2 } from 'lucide-react'
 import { useUserRooms } from '@/hook/use-user-rooms'
-import { useDeleteRoom } from '../src/hooks/use-delete-room'
+import { useDeleteRoom } from '../hook/use-delete-room'
 import { useRouter } from 'next/navigation'
 import { formatContextualDate, formatSmartDate } from '@/lib/date-utils'
 import {
@@ -11,6 +11,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { RoomListSkeleton } from './room-list-skeleton'
 
 export function UserRoomsList() {
   const { data: rooms, isLoading, error } = useUserRooms()
@@ -18,6 +19,7 @@ export function UserRoomsList() {
   const router = useRouter()
   const [isClient, setIsClient] = useState(false)
   const [openPopover, setOpenPopover] = useState<string | null>(null)
+  const [deletingRoomId, setDeletingRoomId] = useState<string | null>(null)
 
   useEffect(() => {
     setIsClient(true)
@@ -29,7 +31,12 @@ export function UserRoomsList() {
   }
 
   const confirmDelete = (roomId: string) => {
-    deleteRoomMutation.mutate({ roomId })
+    setDeletingRoomId(roomId) // Marca a sala como sendo deletada
+    deleteRoomMutation.mutate({ roomId }, {
+      onSettled: () => {
+        setDeletingRoomId(null) // Remove o estado de deletando
+      }
+    })
     setOpenPopover(null) // Fecha o popover
   }
 
@@ -38,11 +45,7 @@ export function UserRoomsList() {
   }
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-400"></div>
-      </div>
-    )
+    return <RoomListSkeleton />
   }
 
   if (error) {
@@ -68,12 +71,38 @@ export function UserRoomsList() {
       <h2 className="text-xl font-semibold text-zinc-100 mb-6">Suas Salas</h2>
       
       <div className="grid gap-4">
-        {rooms.map((room) => (
-          <div
-            key={room.id}
-            onClick={() => router.push(`/room/${room.id}`)}
-            className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 hover:border-zinc-700 transition-colors cursor-pointer group"
-          >
+        {rooms.map((room) => {
+          // Se esta sala está sendo deletada, mostra skeleton
+          if (deletingRoomId === room.id) {
+            return (
+              <div key={room.id} className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 opacity-60">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1 space-y-3">
+                    <div className="h-5 bg-zinc-700 rounded animate-pulse" />
+                    <div className="h-4 bg-zinc-700 rounded animate-pulse w-1/2" />
+                    <div className="flex items-center gap-2">
+                      <div className="h-4 w-4 bg-zinc-700 rounded animate-pulse" />
+                      <div className="h-4 w-32 bg-zinc-700 rounded animate-pulse" />
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2">
+                      <div className="h-4 w-4 bg-zinc-700 rounded animate-pulse" />
+                      <div className="h-4 w-8 bg-zinc-700 rounded animate-pulse" />
+                    </div>
+                    <div className="h-8 w-8 bg-zinc-700 rounded animate-pulse" />
+                  </div>
+                </div>
+              </div>
+            )
+          }
+
+          return (
+            <div
+              key={room.id}
+              onClick={() => router.push(`/room/${room.id}`)}
+              className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 hover:border-zinc-700 transition-colors cursor-pointer group"
+            >
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <h3 className="font-medium text-zinc-100 group-hover:text-orange-400 transition-colors">
@@ -152,8 +181,9 @@ export function UserRoomsList() {
                 </Popover>
               </div>
             </div>
-          </div>
-        ))}
+            </div>
+          )
+        })}
       </div>
     </div>
   )

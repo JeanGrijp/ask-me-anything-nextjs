@@ -1,5 +1,6 @@
+import { deleteRoom } from '@/http/delete-room'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { deleteRoom } from '../http/delete-room'
+
 import { toast } from 'sonner'
 
 export function useDeleteRoom() {
@@ -20,18 +21,26 @@ export function useDeleteRoom() {
         return old.filter((room: any) => room.id !== roomId)
       })
 
+      // Mostrar toast de início da operação
+      toast.loading('Deletando sala...', { id: `delete-${roomId}` })
+
       // Retornar contexto para possível rollback
-      return { previousRooms }
+      return { previousRooms, roomId }
     },
-    onSuccess: () => {
+    onSuccess: (_, { roomId }) => {
+      // Dismiss do toast de loading e mostrar sucesso
+      toast.dismiss(`delete-${roomId}`)
+      toast.success('Sala deletada com sucesso!')
+      
       // Invalidar as queries das salas para garantir sincronização
       queryClient.invalidateQueries({
         queryKey: ['user-rooms']
       })
-      
-      toast.success('Sala deletada com sucesso!')
     },
-    onError: (error: Error, variables, context) => {
+    onError: (error: Error, { roomId }, context) => {
+      // Dismiss do toast de loading
+      toast.dismiss(`delete-${roomId}`)
+      
       // Rollback em caso de erro
       if (context?.previousRooms) {
         queryClient.setQueryData(['user-rooms'], context.previousRooms)
