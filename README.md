@@ -1,15 +1,23 @@
-# Ask Me Anything • Next.js
+<!-- markdownlint-disable MD033 MD041 -->
+<p align="center">
+	<img src="./src/assets/ama-logo.svg" alt="Ask Me Anything" height="64" />
+  
+</p>
+<h1 align="center">Ask Me Anything • Next.js</h1>
+<p align="center">Crie salas públicas de AMA e priorize perguntas por votos em tempo real.</p>
+<!-- markdownlint-enable MD033 MD041 -->
 
-![Ask Me Anything](./src/assets/ama-logo.svg)
+<!-- markdownlint-disable MD033 -->
+<p align="center">
+	<a href="https://nextjs.org/"><img alt="Next.js" src="https://img.shields.io/badge/Next.js-15-000?logo=nextdotjs" /></a>
+	<a href="https://react.dev/"><img alt="React" src="https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white" /></a>
+	<a href="https://www.typescriptlang.org/"><img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" /></a>
+	<a href="https://tailwindcss.com/"><img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind-4-38B2AC?logo=tailwindcss&logoColor=white" /></a>
+	<a href="https://tanstack.com/query/latest"><img alt="TanStack Query" src="https://img.shields.io/badge/TanStack%20Query-5-FF4154?logo=reactquery&logoColor=white" /></a>
+	<a href="https://vercel.com/"><img alt="Vercel" src="https://img.shields.io/badge/Deploy-Vercel-000?logo=vercel" /></a>
 
-> Crie salas públicas de AMA e priorize perguntas por votos em tempo real.
-
-[![Next.js](https://img.shields.io/badge/Next.js-15-000?logo=nextdotjs)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38B2AC?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![TanStack Query](https://img.shields.io/badge/TanStack%20Query-5-FF4154?logo=reactquery&logoColor=white)](https://tanstack.com/query/latest)
-[![Vercel](https://img.shields.io/badge/Deploy-Vercel-000?logo=vercel)](https://vercel.com/)
+</p>
+<!-- markdownlint-enable MD033 -->
 
 ---
 
